@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<title>在线画板-威四方</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<!-- 指定IE和Chrome使用最新版本渲染当前页面 -->
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <meta name="keywords" content="画图工具,在线画板,在线画画,在线绘画">
+  <meta name="description" content="一个强大的在线画板工具" />
+
+  <meta name="renderer" content="webkit">
+  <!-- <meta name="renderer" content="webkit|ie-comp|ie-stand">（分别为极速模式，兼容模式，以及IE模式） -->
+
+  <meta name="author" content="有常无常,赵先方,1748331509@qq.com"> 
+
+  <meta name="robots" content="all"/>
+  <meta name="copyright" content="赵先方,zhaoxianfang"> 
+  <!-- 爬虫来访时间间隔 -->
+  <meta name="revisit-after" content="1 days" >
+
+<style type="text/css" media="screen">
+    svg {
+      /*height: 100%;*/
+      height: 55px;
+      width: 100%;
+      position: relative;
+      /*top: -1rem;*/
+      background: #7B00FF;
+    }
+
+    .word {
+      letter-spacing: 0.05em;
+      color: white;
+      padding: 0.5em;
+      font-size: 28px;
+    }
+    a:link, a:visited {
+        color:#3c8dbc;
+        text-decoration: none;
+    }    
+
+    a:hover, a:active {
+        color:#3c8dbc;
+        text-decoration:none;
+    }
+    .footer{
+        background:#fff;border-top:1px solid #7B00FF; padding:10px 20px 10px 20px;
+        /*color:#ffffff;*/
+    }
+    
+    #toolbar > div{
+        float: left;
+        width:60px;
+    }
+    #toolbar img{
+        height: 50px
+    }
+
+</style>
+<body>
+    <svg role="img">
+        <text class="word" dominant-baseline="central" fill="#222" stroke="#222" stroke-linecap="round" stroke-width="1.5%" text-anchor="middle" x="50%" y="50%">威四方-在线画板 www.weisifang.com</text>
+        <text class="word" dominant-baseline="central" fill="white" text-anchor="middle" x="50%" y="50%">威四方-在线画板www.weisifang.com</text>
+    </svg>
+
+    <div id="zwibbler" style="margin-left:auto;margin-right:auto;border:2px solid #ccc;width:100%;height: calc(100vh - 150px);"></div>
+
+    <div id=toolbar>
+    </div>
+        <div style="clear: both;"></div>
+
+    <div class="footer"> 
+        Copyright &copy; 2018-2020 <a href="http://www.weisifang.cn">威四方</a>.</strong> All rights
+      reserved. 
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" style="float: right;"> 滇ICP备16003347号-2&nbsp;</a></span>
+    </div>
+
+  <script src="./js/zwibbler-demo-zxf.js"></script> 
+    <script type="text/javascript">
+        window.onload = function(){
+
+
+        var zwibbler = Zwibbler.create("zwibbler", {
+                showToolbar: true,
+                showColourPanel: true,
+                //效果图如下 显示工具栏 和下方色彩栏
+                
+                // showToolbar: false,
+                setFocus: false,
+                defaultFillStyle: "rgba(0,0,0,0.0)",
+                defaultStrokeStyle: "#3863f0",
+                defaultLineWidth: 3,
+                defaultBrushColour: "#3863f0",
+                defaultBrushWidth: 3,
+                defaultFontSize: 30,
+                defaultTextFillStyle: "#3863f0",
+                background: "rgba(255, 255, 255, 0.2)"
+        });
+
+        zwibbler.useFreehandTool("rgba(49,41,204,0.9)");
+
+        // 通过路径坐标添加图像图形
+        function Path() {
+            this.commands = [];
+        }
+
+        Path.prototype = {
+            toArray: function() {
+                return this.commands;
+            },
+
+            moveTo: function(x,y) {
+                this.commands.push(0);
+                this.commands.push(x);
+                this.commands.push(y);
+            },
+            // 画多边形
+            lineTo: function(x,y) {
+                this.commands.push(1);
+                this.commands.push(x);
+                this.commands.push(y);
+            }, 
+            // 画圆
+            cornerTo: function(cx, cy, x, y) {
+                this.commands.push(6);
+                this.commands.push(x);
+                this.commands.push(y);
+                this.commands.push(cx);
+                this.commands.push(cy);
+            },
+
+            close: function() {
+                this.commands.push(7);
+            }
+        };
+        var DraggingImage;
+        // 添加 形状工具
+        function addShapeTool(url, actionfn) {
+            var div = document.createElement("div");
+            var img = document.createElement("img");
+            div.appendChild(img);
+            e("toolbar").appendChild(div);
+            img.src = url;
+            img.ondragstart = function(e) {
+                DraggingImage = img;
+            };
+
+            img.dropfn = function(x, y) {
+                var path = new Path();
+                actionfn(x, y, path);
+                zwibbler.createNode("PathNode", {
+                    commands: path.toArray(),
+                    roundRadius: 5,
+                    sloppiness: 0,
+                    shadow: true,
+                    fillStyle: "#59a8eb",
+                    fontSize: "15",
+                    text: "双击添加\n文本"
+                });
+            };
+
+            img.onclick = function() {
+                img.dropfn(100, 100);
+            };
+        }
+        // 添加图片工具
+        function addImageTool(url, actionfn) {
+            var div = document.createElement("div");
+            var img = document.createElement("img");
+            div.appendChild(img);
+            e("toolbar").appendChild(div);
+            img.src = url;
+            img.ondragstart = function(e) {
+                DraggingImage = img;
+            };
+
+            img.dropfn = function(x, y) {
+                if (actionfn) {
+                    actionfn(x, y);
+                } else {
+                    zwibbler.beginTransaction();
+                    var id = zwibbler.createNode("ImageNode", {
+                        url: url
+                    });
+                    zwibbler.translateNode(id, x-img.naturalWidth/2,
+                            y-img.naturalHeight/2);
+                    zwibbler.commitTransaction();
+                }
+            };
+
+            img.onclick = function() {
+                img.dropfn(100, 100);
+            };
+        }
+
+        function e(id) {
+            return document.getElementById(id);
+        }
+
+        //添加箭头
+        addShapeTool("./static/zwibbler/right_arrow.png", function(x, y, path) {
+                var w = 100;
+                var h = 50;
+                console.log(x, y, path)
+
+
+                path.moveTo(x, y+h/4);
+                path.lineTo(x, y+h/4);
+                path.lineTo(x+w*0.75, y+h/4);
+                path.lineTo(x+w*0.75, y);
+                path.lineTo(x+w, y+h/2);
+                path.lineTo(x+w*0.75, y+h);
+                path.lineTo(x+w*0.75, y+h*0.75);
+                path.lineTo(x,  y+h*0.75);
+                path.lineTo(x, y+h/4);
+
+
+                path.close();
+            });
+        addImageTool("./static/zwibbler/zhaoyun.png");
+        addImageTool("./static/zwibbler/girl.png");
+        addImageTool("./static/zwibbler/girl_1.png");
+        addImageTool("./static/zwibbler/girl_2.png");
+        addImageTool("./static/zwibbler/girl_3.png");
+        addImageTool("./static/zwibbler/boy.png");
+        addImageTool("./static/zwibbler/boy_1.png");
+        addImageTool("./static/zwibbler/boy_2.png");
+        addImageTool("./static/zwibbler/girl_4.png");
+        addImageTool("./static/zwibbler/girl_5.png");
+        addImageTool("./static/zwibbler/boy_3.png");
+        addImageTool("./static/zwibbler/boy_4.png");
+    }
+    </script>
+
+</body>
+</html>

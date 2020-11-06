@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<title>在线画板-威四方</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<!-- 指定IE和Chrome使用最新版本渲染当前页面 -->
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <meta name="keywords" content="画图工具,在线画板,在线画画,在线绘画">
+  <meta name="description" content="一个强大的在线画板工具" />
+
+  <meta name="renderer" content="webkit">
+  <!-- <meta name="renderer" content="webkit|ie-comp|ie-stand">（分别为极速模式，兼容模式，以及IE模式） -->
+
+  <meta name="author" content="有常无常,赵先方,1748331509@qq.com"> 
+
+  <meta name="robots" content="all"/>
+  <meta name="copyright" content="赵先方,zhaoxianfang"> 
+  <!-- 爬虫来访时间间隔 -->
+  <meta name="revisit-after" content="1 days" >
+
+<style type="text/css" media="screen">
+    svg {
+      /*height: 100%;*/
+      height: 55px;
+      width: 100%;
+      position: relative;
+      /*top: -1rem;*/
+      background: #7B00FF;
+    }
+
+.word {
+  letter-spacing: 0.05em;
+  color: white;
+  padding: 0.5em;
+  font-size: 28px;
+}
+a:link, a:visited {
+    color:#3c8dbc;
+    text-decoration: none;
+}    
+
+a:hover, a:active {
+    color:#3c8dbc;
+    text-decoration:none;
+}
+.footer{
+    background:#fff;border-top:1px solid #7B00FF; padding:10px 20px 10px 20px;
+    /*color:#ffffff;*/
+}
+
+</style>
+<body>
+    <svg role="img">
+        <text class="word" dominant-baseline="central" fill="#222" stroke="#222" stroke-linecap="round" stroke-width="1.5%" text-anchor="middle" x="50%" y="50%">威四方-在线画板</text>
+        <text class="word" dominant-baseline="central" fill="white" text-anchor="middle" x="50%" y="50%">威四方-在线画板</text>
+    </svg>
+
+    <div id="zwibbler" style="margin-left:auto;margin-right:auto;border:2px solid #ccc;width:100%;height: calc(100vh - 150px);"></div>
+
+    <div class="footer"> 
+        Copyright &copy; 2018-2020 <a href="http://www.weisifang.cn">威四方</a>.</strong> All rights
+      reserved. 
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" style="float: right;"> 滇ICP备16003347号-6&nbsp;</a></span>
+    </div>
+
+  <!-- <script src="http://zwibbler.com/zwibbler-demo.js"></script>  -->
+  <script src="./js/zwibbler-demo-zxf.js"></script> 
+    <script type="text/javascript">
+        var zwibbler = Zwibbler.create("zwibbler", {
+				showToolbar: true,
+			    showColourPanel: true,
+			    //效果图如下 显示工具栏 和下方色彩栏
+                
+                // showToolbar: false,
+                setFocus: false,
+                defaultFillStyle: "rgba(0,0,0,0.0)",
+                defaultStrokeStyle: "#3863f0",
+                defaultLineWidth: 3,
+                defaultBrushColour: "#3863f0",
+                defaultBrushWidth: 3,
+                defaultFontSize: 30,
+                defaultTextFillStyle: "#3863f0",
+                background: "rgba(255, 255, 255, 0.2)"
+        });
+    </script>
+
+</body>
+</html>
